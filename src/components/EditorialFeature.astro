@@ -1,0 +1,81 @@
+---
+import { getFaviconUrl, pricingLabel, surfaceLabel } from '../data/catalog';
+import type { Locale, Tool } from '../data/catalog';
+
+type EditorialCard = {
+	name: string;
+	kicker: string;
+	text: string;
+};
+
+const { locale, cards, quote, title, text, toolsByName } = Astro.props as {
+	locale: Locale;
+	cards: EditorialCard[];
+	quote: string;
+	title: string;
+	text: string;
+	toolsByName: Map<string, Tool>;
+};
+---
+
+<section class="section editorial">
+	<div class="section__heading">
+		<p class="section__eyebrow">Editorial</p>
+		<h2>{title}</h2>
+		<p>{text}</p>
+	</div>
+
+	<div class="editorial__grid">
+		<div class="editorial__lead">
+			<div class="editorial__wash"></div>
+			<div class="editorial__stack">
+				<span class="editorial__issue">{locale === 'en' ? 'Issue 01' : '第 01 期'}</span>
+				<h3>{locale === 'en' ? 'Coding agents are no longer a feature category.' : 'Coding agent 已经不再只是功能分类。'}</h3>
+				<p>
+					{locale === 'en'
+						? 'They now form a new software surface: one part editor, one part operating model, one part economic design.'
+						: '它们正在形成一种新的软件表面：一部分是编辑器，一部分是工作方式，一部分是经济结构。'}
+				</p>
+			</div>
+			<blockquote class="editorial__quote">
+				<p>{quote}</p>
+			</blockquote>
+		</div>
+
+		<div class="editorial__cards">
+			{cards.map((card, index) => {
+				const tool = toolsByName.get(card.name);
+				return (
+					<article class={`editorial-card editorial-card--${index + 1}`} style={tool ? `--brand:${tool.brandColor};` : undefined}>
+						<div class="editorial-card__badge">{card.kicker}</div>
+						<div class="editorial-card__brand">
+							<div class="editorial-card__logo-shell">
+								{tool ? (
+									<img class="editorial-card__logo" src={getFaviconUrl(tool.brandUrl)} alt={`${card.name} logo`} loading="lazy" />
+								) : (
+									<div class="editorial-card__logo-fallback">{card.name.slice(0, 1)}</div>
+								)}
+							</div>
+							<div>
+								<h3>{card.name}</h3>
+								{tool?.stars && <p class="editorial-card__meta">{tool.stars} • {tool.type[locale]}</p>}
+								{tool && (
+									<p class="editorial-card__meta editorial-card__meta--chips">
+										<span>{surfaceLabel(tool.surfaceGroup, locale)}</span>
+										<span>{pricingLabel(tool.pricingModel, locale)}</span>
+									</p>
+								)}
+							</div>
+						</div>
+						<p>{card.text}</p>
+						{tool && (
+							<a href={tool.href} target="_blank" rel="noreferrer" class="editorial-card__link">
+								{locale === 'en' ? 'Open profile' : '查看条目'}
+							</a>
+						)}
+					</article>
+				);
+			})}
+		</div>
+	</div>
+</section>

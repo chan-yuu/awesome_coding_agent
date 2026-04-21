@@ -1,0 +1,60 @@
+---
+import { featuredToolNames, getFaviconUrl, pricingLabel, surfaceLabel, tools } from '../data/catalog';
+import type { Locale, Tool } from '../data/catalog';
+
+const { locale, title, text } = Astro.props as {
+	locale: Locale;
+	title: string;
+	text: string;
+};
+
+const featuredTools = featuredToolNames
+	.map((name) => tools.find((tool) => tool.name === name))
+	.filter((tool): tool is Tool => Boolean(tool));
+---
+
+<section class="section brand-wall">
+	<div class="section__heading">
+		<p class="section__eyebrow">Brands</p>
+		<h2>{title}</h2>
+		<p>{text}</p>
+	</div>
+
+	<div class="brand-wall__grid">
+		{featuredTools.map((tool, index) => (
+			<article class={`brand-tile brand-tile--${index + 1}`} style={`--brand:${tool.brandColor};`}>
+				<div class="brand-tile__glow"></div>
+				<div class="brand-tile__top">
+					<div class="brand-tile__identity">
+						<div class="brand-tile__logo-shell">
+							<img class="brand-tile__logo" src={getFaviconUrl(tool.brandUrl)} alt={`${tool.name} logo`} loading="lazy" />
+						</div>
+						<div>
+							<p class="brand-tile__eyebrow">{tool.category === 'open' ? (locale === 'en' ? 'Open source' : '开源') : locale === 'en' ? 'Closed source' : '闭源'}</p>
+							<h3>{tool.name}</h3>
+						</div>
+					</div>
+					{tool.stars && <div class="brand-tile__stars">{tool.stars}</div>}
+				</div>
+
+				<p class="brand-tile__text">{tool.highlight[locale]}</p>
+
+				<div class="brand-tile__chips">
+					<span>{surfaceLabel(tool.surfaceGroup, locale)}</span>
+					<span>{pricingLabel(tool.pricingModel, locale)}</span>
+				</div>
+
+				<div class="brand-tile__bar">
+					<div class="brand-tile__metric">
+						<label>{locale === 'en' ? 'Convenience' : '便利性'}</label>
+						<div><span style={`width:${tool.convenienceScore}%`}></span></div>
+					</div>
+					<div class="brand-tile__metric">
+						<label>{locale === 'en' ? 'Delegation' : '委托度'}</label>
+						<div><span style={`width:${tool.delegationScore}%`}></span></div>
+					</div>
+				</div>
+			</article>
+		))}
+	</div>
+</section>

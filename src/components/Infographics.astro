@@ -1,0 +1,127 @@
+---
+import type { Locale } from '../data/catalog';
+
+const { locale, copy } = Astro.props as {
+	locale: Locale;
+	copy: {
+		matrixTitle: string;
+		matrixText: string;
+		mapTitle: string;
+		mapText: string;
+		atlasTitle: string;
+		atlasText: string;
+		axisXLow: string;
+		axisXHigh: string;
+		axisYLow: string;
+		axisYHigh: string;
+	};
+};
+
+const matrixRows =
+	locale === 'en'
+		? [
+				{ name: 'OpenCode', openness: 'Open', surface: 'Terminal', pricing: 'BYOK', autonomy: 'High' },
+				{ name: 'Cursor', openness: 'Closed', surface: 'Editor', pricing: 'Seat', autonomy: 'Medium' },
+				{ name: 'GitHub Copilot', openness: 'Closed', surface: 'Platform', pricing: 'Seat + usage', autonomy: 'Medium' },
+				{ name: 'Claude Code', openness: 'Closed', surface: 'Terminal', pricing: 'Subscription + API', autonomy: 'High' },
+				{ name: 'Devin', openness: 'Closed', surface: 'Cloud worker', pricing: 'Usage', autonomy: 'Very high' },
+				{ name: 'Zed', openness: 'Open', surface: 'Editor', pricing: 'Free + hosted AI', autonomy: 'Medium' },
+			]
+		: [
+				{ name: 'OpenCode', openness: '开源', surface: '终端', pricing: 'BYOK', autonomy: '高' },
+				{ name: 'Cursor', openness: '闭源', surface: '编辑器', pricing: 'Seat', autonomy: '中' },
+				{ name: 'GitHub Copilot', openness: '闭源', surface: '平台', pricing: 'Seat + 用量', autonomy: '中' },
+				{ name: 'Claude Code', openness: '闭源', surface: '终端', pricing: '订阅 + API', autonomy: '高' },
+				{ name: 'Devin', openness: '闭源', surface: '云端工作者', pricing: '按量', autonomy: '很高' },
+				{ name: 'Zed', openness: '开源', surface: '编辑器', pricing: '免费 + 托管 AI', autonomy: '中' },
+			];
+
+const atlasItems =
+	locale === 'en'
+		? [
+				{ label: 'BYOK', text: 'Best for control, but easy to underestimate in total cost.' },
+				{ label: 'Seat', text: 'Good for budgeting, but often paired with premium request limits.' },
+				{ label: 'Credit', text: 'Usually clearer than fake-unlimited plans, though psychologically harsher.' },
+				{ label: 'Usage', text: 'Matches async labor products and heavy delegated execution.' },
+			]
+		: [
+				{ label: 'BYOK', text: '控制力最强，但总成本最容易被低估。' },
+				{ label: 'Seat', text: '适合预算管理，但常常叠加 premium request 限制。' },
+				{ label: 'Credit', text: '通常比伪无限更诚实，只是心理感受更直接。' },
+				{ label: 'Usage', text: '更适合异步劳动型产品和高强度委托执行。' },
+			];
+
+const mapNodes = [
+	{ name: 'OpenCode', x: '24%', y: '60%' },
+	{ name: 'Codex CLI', x: '38%', y: '58%' },
+	{ name: 'Cursor', x: '68%', y: '52%' },
+	{ name: 'GitHub Copilot', x: '78%', y: '46%' },
+	{ name: 'Kiro', x: '62%', y: '38%' },
+	{ name: 'Replit Agent', x: '74%', y: '26%' },
+	{ name: 'Devin', x: '58%', y: '14%' },
+	{ name: 'OpenHands', x: '34%', y: '24%' },
+];
+---
+
+<section class="section infographics">
+	<div class="section__heading">
+		<p class="section__eyebrow">Infographics</p>
+		<h2>{copy.matrixTitle}</h2>
+		<p>{copy.matrixText}</p>
+	</div>
+
+	<div class="matrix-card">
+		<div class="matrix-table">
+			<div class="matrix-table__head">{locale === 'en' ? 'Tool' : '工具'}</div>
+			<div class="matrix-table__head">{locale === 'en' ? 'Openness' : '开放性'}</div>
+			<div class="matrix-table__head">{locale === 'en' ? 'Surface' : '界面'}</div>
+			<div class="matrix-table__head">{locale === 'en' ? 'Pricing' : '定价'}</div>
+			<div class="matrix-table__head">{locale === 'en' ? 'Autonomy' : '自治度'}</div>
+
+			{matrixRows.map((row) => (
+				<>
+					<div class="matrix-table__cell matrix-table__cell--name">{row.name}</div>
+					<div class="matrix-table__cell"><span class="matrix-pill">{row.openness}</span></div>
+					<div class="matrix-table__cell">{row.surface}</div>
+					<div class="matrix-table__cell">{row.pricing}</div>
+					<div class="matrix-table__cell">{row.autonomy}</div>
+				</>
+			))}
+		</div>
+	</div>
+
+	<div class="info-grid">
+		<div class="map-card">
+			<p class="section__eyebrow">Map</p>
+			<h3>{copy.mapTitle}</h3>
+			<p>{copy.mapText}</p>
+			<div class="landscape-map">
+				<div class="landscape-map__axes landscape-map__axes--horizontal"></div>
+				<div class="landscape-map__axes landscape-map__axes--vertical"></div>
+				{mapNodes.map((node, index) => (
+					<div class={`landscape-map__node landscape-map__node--${index + 1}`} style={`left:${node.x}; top:${node.y};`}>
+						<span>{node.name}</span>
+					</div>
+				))}
+				<div class="landscape-map__label landscape-map__label--x0">{copy.axisXLow}</div>
+				<div class="landscape-map__label landscape-map__label--x1">{copy.axisXHigh}</div>
+				<div class="landscape-map__label landscape-map__label--y0">{copy.axisYLow}</div>
+				<div class="landscape-map__label landscape-map__label--y1">{copy.axisYHigh}</div>
+			</div>
+		</div>
+
+		<div class="atlas-card">
+			<p class="section__eyebrow">Pricing</p>
+			<h3>{copy.atlasTitle}</h3>
+			<p>{copy.atlasText}</p>
+			<div class="atlas-list">
+				{atlasItems.map((item) => (
+					<div class="atlas-item">
+						<div class="atlas-item__tag">{item.label}</div>
+						<p>{item.text}</p>
+					</div>
+				))}
+			</div>
+		</div>
+	</div>
+</section>

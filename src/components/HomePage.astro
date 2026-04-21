@@ -1,4 +1,8 @@
 ---
+import BrandWall from './BrandWall.astro';
+import EditorialFeature from './EditorialFeature.astro';
+import Infographics from './Infographics.astro';
+import InteractiveLandscape from './InteractiveLandscape.astro';
 import ToolCard from './ToolCard.astro';
 import { copy, tools } from '../data/catalog';
 import type { Locale } from '../data/catalog';
@@ -8,6 +12,12 @@ const { locale } = Astro.props as { locale: Locale };
 const content = copy[locale];
 const openTools = tools.filter((tool) => tool.category === 'open');
 const closedTools = tools.filter((tool) => tool.category === 'closed');
+const marqueeTools = [...tools, ...tools];
+const topOpenStars = openTools[0]?.stars ?? '';
+const totalTools = tools.length;
+const openCount = openTools.length;
+const closedCount = closedTools.length;
+const toolsByName = new Map(tools.map((tool) => [tool.name, tool]));
 ---
 
 <div class="page-shell">
@@ -38,6 +48,29 @@ const closedTools = tools.filter((tool) => tool.category === 'closed');
 			<div class="hero__panel">
 				<p class="hero__panel-label">{content.snapshotTitle}</p>
 				<p class="hero__panel-text">{content.snapshotText}</p>
+				<div class="market-map">
+					<div class="market-map__grid"></div>
+					<div class="market-map__core">
+						<span>{locale === 'en' ? 'Agent Era' : '代理时代'}</span>
+					</div>
+					{content.modes.map((mode, index) => (
+						<div class={`market-map__node market-map__node--${index + 1}`}>{mode}</div>
+					))}
+				</div>
+				<div class="signal-metrics">
+					<div class="signal-metric">
+						<span>{locale === 'en' ? 'Products tracked' : '已收录产品'}</span>
+						<strong>{totalTools}</strong>
+					</div>
+					<div class="signal-metric">
+						<span>{locale === 'en' ? 'Open-source leaders' : '开源重点'}</span>
+						<strong>{openCount}</strong>
+					</div>
+					<div class="signal-metric">
+						<span>{locale === 'en' ? 'Top open-source star signal' : '最高开源 star 信号'}</span>
+						<strong>{topOpenStars}</strong>
+					</div>
+				</div>
 				<div class="hero__grid">
 					{content.highlights.map((item) => (
 						<div class="snapshot-card">
@@ -50,7 +83,91 @@ const closedTools = tools.filter((tool) => tool.category === 'closed');
 		</div>
 	</header>
 
+	<section class="ticker">
+		<div class="ticker__track">
+			{marqueeTools.map((tool) => (
+				<div class={`ticker__item ticker__item--${tool.category}`}>
+					<span class="ticker__name">{tool.name}</span>
+					<span class="ticker__type">{tool.type[locale]}</span>
+				</div>
+			))}
+		</div>
+	</section>
+
 	<main class="content">
+		<section class="section signal-strip">
+			<div class="section__heading section__heading--compact">
+				<p class="section__eyebrow">Signal</p>
+				<h2>{content.signalTitle}</h2>
+				<p>{content.modeText}</p>
+			</div>
+
+			<div class="signal-strip__grid">
+				<div class="signal-chart">
+					<div class="signal-chart__header">
+						<span>{locale === 'en' ? 'Market split' : '市场结构'}</span>
+						<strong>{openCount} / {closedCount}</strong>
+					</div>
+					<div class="signal-chart__bars">
+						<div class="signal-chart__bar signal-chart__bar--open" style={`--value:${(openCount / totalTools) * 100}%`}>
+							<span>{locale === 'en' ? 'Open-source' : '开源'}</span>
+						</div>
+						<div class="signal-chart__bar signal-chart__bar--closed" style={`--value:${(closedCount / totalTools) * 100}%`}>
+							<span>{locale === 'en' ? 'Closed-source' : '闭源'}</span>
+						</div>
+					</div>
+				</div>
+
+				{content.signalCards.map((card) => (
+					<div class="signal-story">
+						<h3>{card.title}</h3>
+						<p>{card.text}</p>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<BrandWall locale={locale} title={content.brandWallTitle} text={content.brandWallText} />
+
+		<EditorialFeature
+			locale={locale}
+			title={content.editorialTitle}
+			text={content.editorialText}
+			quote={content.editorialQuote}
+			cards={content.editorialCards}
+			toolsByName={toolsByName}
+		/>
+
+		<InteractiveLandscape
+			locale={locale}
+			copy={{
+				title: content.filterTitle,
+				text: content.filterText,
+				axisXLow: content.axisXLow,
+				axisXHigh: content.axisXHigh,
+				axisYLow: content.axisYLow,
+				axisYHigh: content.axisYHigh,
+				axisXLabel: content.axisXLabel,
+				axisYLabel: content.axisYLabel,
+			}}
+		/>
+
+		<Infographics
+			locale={locale}
+			copy={{
+				matrixTitle: content.matrixTitle,
+				matrixText: content.matrixText,
+				mapTitle: content.mapTitle,
+				mapText: content.mapText,
+				atlasTitle: content.atlasTitle,
+				atlasText: content.atlasText,
+				axisXLow: content.axisXLow,
+				axisXHigh: content.axisXHigh,
+				axisYLow: content.axisYLow,
+				axisYHigh: content.axisYHigh,
+			}}
+		/>
+
 		<section class="section">
 			<div class="section__heading">
 				<p class="section__eyebrow">Open Source</p>

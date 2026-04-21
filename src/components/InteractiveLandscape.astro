@@ -1,0 +1,173 @@
+---
+import { getFaviconUrl, pricingLabel, surfaceLabel, tools } from '../data/catalog';
+import type { Locale, PricingModel, SurfaceGroup, Tool } from '../data/catalog';
+
+const { locale, copy } = Astro.props as {
+	locale: Locale;
+	copy: {
+		title: string;
+		text: string;
+		axisXLow: string;
+		axisXHigh: string;
+		axisYLow: string;
+		axisYHigh: string;
+		axisXLabel: string;
+		axisYLabel: string;
+	};
+};
+
+const opennessOptions = [
+	{ value: 'all', label: locale === 'en' ? 'All' : '全部' },
+	{ value: 'open', label: locale === 'en' ? 'Open source' : '开源' },
+	{ value: 'closed', label: locale === 'en' ? 'Closed source' : '闭源' },
+];
+
+const surfaceOptions: { value: 'all' | SurfaceGroup; label: string }[] = [
+	{ value: 'all', label: locale === 'en' ? 'All surfaces' : '全部界面' },
+	{ value: 'terminal', label: surfaceLabel('terminal', locale) },
+	{ value: 'editor', label: surfaceLabel('editor', locale) },
+	{ value: 'platform', label: surfaceLabel('platform', locale) },
+	{ value: 'cloud', label: surfaceLabel('cloud', locale) },
+];
+
+const pricingOptions: { value: 'all' | PricingModel; label: string }[] = [
+	{ value: 'all', label: locale === 'en' ? 'All pricing' : '全部计费' },
+	{ value: 'BYOK', label: pricingLabel('BYOK', locale) },
+	{ value: 'Seat', label: pricingLabel('Seat', locale) },
+	{ value: 'Credit', label: pricingLabel('Credit', locale) },
+	{ value: 'Usage', label: pricingLabel('Usage', locale) },
+	{ value: 'Hybrid', label: pricingLabel('Hybrid', locale) },
+];
+
+function pointStyle(tool: Tool) {
+	return `left:${tool.convenienceScore}%; top:${100 - tool.delegationScore}%; --brand:${tool.brandColor};`;
+}
+---
+
+<section class="section filter-map">
+	<div class="section__heading">
+		<p class="section__eyebrow">Filters</p>
+		<h2>{copy.title}</h2>
+		<p>{copy.text}</p>
+	</div>
+
+	<div class="filter-shell" data-filter-root>
+		<div class="filter-toolbar">
+			<div class="filter-group">
+				<label for={`filter-openness-${locale}`}>{locale === 'en' ? 'Openness' : '开放性'}</label>
+				<select id={`filter-openness-${locale}`} data-filter="openness">
+					{opennessOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+				</select>
+			</div>
+			<div class="filter-group">
+				<label for={`filter-surface-${locale}`}>{locale === 'en' ? 'Surface' : '界面'}</label>
+				<select id={`filter-surface-${locale}`} data-filter="surface">
+					{surfaceOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+				</select>
+			</div>
+			<div class="filter-group">
+				<label for={`filter-pricing-${locale}`}>{locale === 'en' ? 'Pricing' : '计费'}</label>
+				<select id={`filter-pricing-${locale}`} data-filter="pricing">
+					{pricingOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+				</select>
+			</div>
+		</div>
+
+		<div class="interactive-map">
+			<div class="interactive-map__axis interactive-map__axis--horizontal"></div>
+			<div class="interactive-map__axis interactive-map__axis--vertical"></div>
+			<div class="interactive-map__legend interactive-map__legend--x">{copy.axisXLabel}</div>
+			<div class="interactive-map__legend interactive-map__legend--y">{copy.axisYLabel}</div>
+
+			{tools.map((tool) => (
+				<button
+					type="button"
+					class="interactive-node"
+					style={pointStyle(tool)}
+					data-category={tool.category}
+					data-surface={tool.surfaceGroup}
+					data-pricing={tool.pricingModel}
+					data-node
+				>
+					<div class="interactive-node__logo-shell">
+						<img class="interactive-node__logo" src={getFaviconUrl(tool.brandUrl)} alt={`${tool.name} logo`} loading="lazy" />
+					</div>
+					<div class="interactive-node__label">
+						<strong>{tool.name}</strong>
+						<span>{surfaceLabel(tool.surfaceGroup, locale)} · {pricingLabel(tool.pricingModel, locale)}</span>
+					</div>
+				</button>
+			))}
+
+			<div class="landscape-map__label landscape-map__label--x0">{copy.axisXLow}</div>
+			<div class="landscape-map__label landscape-map__label--x1">{copy.axisXHigh}</div>
+			<div class="landscape-map__label landscape-map__label--y0">{copy.axisYLow}</div>
+			<div class="landscape-map__label landscape-map__label--y1">{copy.axisYHigh}</div>
+		</div>
+
+		<div class="filter-results">
+			{tools.map((tool) => (
+				<article
+					class="filter-result-card"
+					data-result
+					data-category={tool.category}
+					data-surface={tool.surfaceGroup}
+					data-pricing={tool.pricingModel}
+					style={`--brand:${tool.brandColor};`}
+				>
+					<div class="filter-result-card__top">
+						<div class="filter-result-card__identity">
+							<div class="filter-result-card__logo-shell">
+								<img class="filter-result-card__logo" src={getFaviconUrl(tool.brandUrl)} alt={`${tool.name} logo`} loading="lazy" />
+							</div>
+							<div>
+								<h3>{tool.name}</h3>
+								<p>{tool.type[locale]}</p>
+							</div>
+						</div>
+						{tool.stars && <span class="filter-result-card__stars">{tool.stars}</span>}
+					</div>
+					<p class="filter-result-card__text">{tool.highlight[locale]}</p>
+					<div class="filter-result-card__chips">
+						<span>{tool.category === 'open' ? (locale === 'en' ? 'Open source' : '开源') : locale === 'en' ? 'Closed source' : '闭源'}</span>
+						<span>{surfaceLabel(tool.surfaceGroup, locale)}</span>
+						<span>{pricingLabel(tool.pricingModel, locale)}</span>
+					</div>
+				</article>
+			))}
+		</div>
+	</div>
+</section>
+
+<script is:inline>
+	document.querySelectorAll('[data-filter-root]').forEach((root) => {
+		const selects = {
+			openness: root.querySelector('[data-filter="openness"]'),
+			surface: root.querySelector('[data-filter="surface"]'),
+			pricing: root.querySelector('[data-filter="pricing"]'),
+		};
+
+		const match = (el, filters) => {
+			const byCategory = filters.openness === 'all' || el.dataset.category === filters.openness;
+			const bySurface = filters.surface === 'all' || el.dataset.surface === filters.surface;
+			const byPricing = filters.pricing === 'all' || el.dataset.pricing === filters.pricing;
+			return byCategory && bySurface && byPricing;
+		};
+
+		const update = () => {
+			const filters = {
+				openness: selects.openness?.value ?? 'all',
+				surface: selects.surface?.value ?? 'all',
+				pricing: selects.pricing?.value ?? 'all',
+			};
+
+			root.querySelectorAll('[data-node], [data-result]').forEach((el) => {
+				const visible = match(el, filters);
+				el.classList.toggle('is-hidden', !visible);
+			});
+		};
+
+		Object.values(selects).forEach((select) => select?.addEventListener('change', update));
+		update();
+	});
+</script>

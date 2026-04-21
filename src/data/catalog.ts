@@ -1,22 +1,81 @@
 export type Locale = 'en' | 'zh-CN';
 
+export type SurfaceGroup = 'terminal' | 'editor' | 'platform' | 'cloud';
+export type PricingModel = 'BYOK' | 'Seat' | 'Credit' | 'Usage' | 'Hybrid';
+
 export type Tool = {
 	name: string;
 	href: string;
+	brandUrl: string;
+	brandColor: string;
 	stars?: string;
 	category: 'open' | 'closed';
+	surfaceGroup: SurfaceGroup;
+	pricingModel: PricingModel;
+	convenienceScore: number;
+	delegationScore: number;
 	type: Record<Locale, string>;
 	highlight: Record<Locale, string>;
 	pricing: Record<Locale, string>;
 	bestFor: Record<Locale, string>;
 };
 
+export function getFaviconUrl(brandUrl: string) {
+	return `https://www.google.com/s2/favicons?sz=128&domain_url=${encodeURIComponent(brandUrl)}`;
+}
+
+export function surfaceLabel(surface: SurfaceGroup, locale: Locale) {
+	const labels = {
+		en: {
+			terminal: 'Terminal',
+			editor: 'Editor',
+			platform: 'Platform',
+			cloud: 'Cloud',
+		},
+		'zh-CN': {
+			terminal: '终端',
+			editor: '编辑器',
+			platform: '平台',
+			cloud: '云端',
+		},
+	};
+
+	return labels[locale][surface];
+}
+
+export function pricingLabel(model: PricingModel, locale: Locale) {
+	const labels = {
+		en: {
+			BYOK: 'BYOK',
+			Seat: 'Seat',
+			Credit: 'Credit',
+			Usage: 'Usage',
+			Hybrid: 'Hybrid',
+		},
+		'zh-CN': {
+			BYOK: 'BYOK',
+			Seat: 'Seat',
+			Credit: 'Credit',
+			Usage: '按量',
+			Hybrid: '混合',
+		},
+	};
+
+	return labels[locale][model];
+}
+
 export const tools: Tool[] = [
 	{
 		name: 'OpenCode',
 		href: 'https://github.com/anomalyco/opencode',
+		brandUrl: 'https://opencode.ai',
+		brandColor: '#6d5efc',
 		stars: '147k',
 		category: 'open',
+		surfaceGroup: 'terminal',
+		pricingModel: 'BYOK',
+		convenienceScore: 34,
+		delegationScore: 56,
 		type: {
 			en: 'Terminal agent',
 			'zh-CN': '终端代理',
@@ -37,8 +96,14 @@ export const tools: Tool[] = [
 	{
 		name: 'Gemini CLI',
 		href: 'https://github.com/google-gemini/gemini-cli',
+		brandUrl: 'https://gemini.google.com',
+		brandColor: '#2b7fff',
 		stars: '102k',
 		category: 'open',
+		surfaceGroup: 'terminal',
+		pricingModel: 'Hybrid',
+		convenienceScore: 46,
+		delegationScore: 50,
 		type: {
 			en: 'Terminal agent',
 			'zh-CN': '终端代理',
@@ -59,8 +124,14 @@ export const tools: Tool[] = [
 	{
 		name: 'Zed',
 		href: 'https://zed.dev/pricing',
+		brandUrl: 'https://zed.dev',
+		brandColor: '#1243ff',
 		stars: '79.5k',
 		category: 'open',
+		surfaceGroup: 'editor',
+		pricingModel: 'Hybrid',
+		convenienceScore: 60,
+		delegationScore: 44,
 		type: {
 			en: 'Open editor with agents',
 			'zh-CN': '带代理能力的开源编辑器',
@@ -81,8 +152,14 @@ export const tools: Tool[] = [
 	{
 		name: 'Codex CLI',
 		href: 'https://github.com/openai/codex',
+		brandUrl: 'https://openai.com',
+		brandColor: '#0f172a',
 		stars: '76.7k',
 		category: 'open',
+		surfaceGroup: 'terminal',
+		pricingModel: 'Hybrid',
+		convenienceScore: 52,
+		delegationScore: 55,
 		type: {
 			en: 'Terminal agent',
 			'zh-CN': '终端代理',
@@ -103,8 +180,14 @@ export const tools: Tool[] = [
 	{
 		name: 'OpenHands',
 		href: 'https://github.com/OpenHands/OpenHands',
+		brandUrl: 'https://openhands.dev',
+		brandColor: '#7b61ff',
 		stars: '71.6k',
 		category: 'open',
+		surfaceGroup: 'platform',
+		pricingModel: 'Hybrid',
+		convenienceScore: 40,
+		delegationScore: 76,
 		type: {
 			en: 'Open agent platform',
 			'zh-CN': '开放代理平台',
@@ -125,8 +208,14 @@ export const tools: Tool[] = [
 	{
 		name: 'Cline',
 		href: 'https://github.com/cline/cline',
+		brandUrl: 'https://cline.bot',
+		brandColor: '#0f766e',
 		stars: '60.5k',
 		category: 'open',
+		surfaceGroup: 'editor',
+		pricingModel: 'BYOK',
+		convenienceScore: 56,
+		delegationScore: 42,
 		type: {
 			en: 'VS Code agent',
 			'zh-CN': 'VS Code 代理',
@@ -147,8 +236,14 @@ export const tools: Tool[] = [
 	{
 		name: 'Aider',
 		href: 'https://github.com/Aider-AI/aider',
+		brandUrl: 'https://aider.chat',
+		brandColor: '#ea580c',
 		stars: '43.7k',
 		category: 'open',
+		surfaceGroup: 'terminal',
+		pricingModel: 'BYOK',
+		convenienceScore: 30,
+		delegationScore: 35,
 		type: {
 			en: 'Terminal coding assistant',
 			'zh-CN': '终端编码助手',
@@ -169,8 +264,14 @@ export const tools: Tool[] = [
 	{
 		name: 'Goose',
 		href: 'https://github.com/aaif-goose/goose',
+		brandUrl: 'https://block.github.io/goose/',
+		brandColor: '#22c55e',
 		stars: '42.9k',
 		category: 'open',
+		surfaceGroup: 'platform',
+		pricingModel: 'Hybrid',
+		convenienceScore: 48,
+		delegationScore: 58,
 		type: {
 			en: 'Desktop + CLI agent',
 			'zh-CN': '桌面 + CLI 代理',
@@ -191,8 +292,14 @@ export const tools: Tool[] = [
 	{
 		name: 'Continue',
 		href: 'https://github.com/continuedev/continue',
+		brandUrl: 'https://continue.dev',
+		brandColor: '#7c3aed',
 		stars: '32.7k',
 		category: 'open',
+		surfaceGroup: 'platform',
+		pricingModel: 'Hybrid',
+		convenienceScore: 52,
+		delegationScore: 50,
 		type: {
 			en: 'Open agent stack',
 			'zh-CN': '开放代理栈',
@@ -213,8 +320,14 @@ export const tools: Tool[] = [
 	{
 		name: 'Roo Code',
 		href: 'https://github.com/RooCodeInc/Roo-Code',
+		brandUrl: 'https://roocode.com',
+		brandColor: '#0ea5e9',
 		stars: '23.3k',
 		category: 'open',
+		surfaceGroup: 'editor',
+		pricingModel: 'BYOK',
+		convenienceScore: 58,
+		delegationScore: 46,
 		type: {
 			en: 'Role-based VS Code agent',
 			'zh-CN': '角色化 VS Code 代理',
@@ -235,8 +348,14 @@ export const tools: Tool[] = [
 	{
 		name: 'Crush',
 		href: 'https://github.com/charmbracelet/crush',
+		brandUrl: 'https://charm.sh',
+		brandColor: '#111827',
 		stars: '23.3k',
 		category: 'open',
+		surfaceGroup: 'terminal',
+		pricingModel: 'BYOK',
+		convenienceScore: 36,
+		delegationScore: 41,
 		type: {
 			en: 'TUI terminal agent',
 			'zh-CN': 'TUI 终端代理',
@@ -257,7 +376,13 @@ export const tools: Tool[] = [
 	{
 		name: 'GitHub Copilot',
 		href: 'https://github.com/features/copilot',
+		brandUrl: 'https://github.com/features/copilot',
+		brandColor: '#171515',
 		category: 'closed',
+		surfaceGroup: 'platform',
+		pricingModel: 'Hybrid',
+		convenienceScore: 78,
+		delegationScore: 60,
 		type: {
 			en: 'Platform-native coding agent',
 			'zh-CN': '平台原生 coding agent',
@@ -278,7 +403,13 @@ export const tools: Tool[] = [
 	{
 		name: 'Cursor',
 		href: 'https://cursor.com/en-US/pricing',
+		brandUrl: 'https://cursor.com',
+		brandColor: '#111111',
 		category: 'closed',
+		surfaceGroup: 'editor',
+		pricingModel: 'Seat',
+		convenienceScore: 72,
+		delegationScore: 52,
 		type: {
 			en: 'AI-first editor',
 			'zh-CN': 'AI 原生编辑器',
@@ -299,7 +430,13 @@ export const tools: Tool[] = [
 	{
 		name: 'Windsurf',
 		href: 'https://windsurf.com/pricing?referrer=windsurf',
+		brandUrl: 'https://windsurf.com',
+		brandColor: '#4f46e5',
 		category: 'closed',
+		surfaceGroup: 'editor',
+		pricingModel: 'Credit',
+		convenienceScore: 74,
+		delegationScore: 54,
 		type: {
 			en: 'Agentic editor',
 			'zh-CN': '代理式编辑器',
@@ -320,7 +457,13 @@ export const tools: Tool[] = [
 	{
 		name: 'Claude Code',
 		href: 'https://claude.com/product/claude-code',
+		brandUrl: 'https://claude.com',
+		brandColor: '#9a3412',
 		category: 'closed',
+		surfaceGroup: 'terminal',
+		pricingModel: 'Hybrid',
+		convenienceScore: 58,
+		delegationScore: 64,
 		type: {
 			en: 'Premium coding specialist',
 			'zh-CN': '高端 coding specialist',
@@ -341,7 +484,13 @@ export const tools: Tool[] = [
 	{
 		name: 'Devin',
 		href: 'https://docs.devin.ai/zh/admin/billing',
+		brandUrl: 'https://devin.ai',
+		brandColor: '#7c2d12',
 		category: 'closed',
+		surfaceGroup: 'cloud',
+		pricingModel: 'Usage',
+		convenienceScore: 66,
+		delegationScore: 92,
 		type: {
 			en: 'Async software engineer',
 			'zh-CN': '异步代理工程师',
@@ -362,7 +511,13 @@ export const tools: Tool[] = [
 	{
 		name: 'Replit Agent',
 		href: 'https://replit.com/products/agent',
+		brandUrl: 'https://replit.com',
+		brandColor: '#f97316',
 		category: 'closed',
+		surfaceGroup: 'cloud',
+		pricingModel: 'Credit',
+		convenienceScore: 84,
+		delegationScore: 74,
 		type: {
 			en: 'Idea-to-app agent',
 			'zh-CN': '从想法到应用的代理',
@@ -383,7 +538,13 @@ export const tools: Tool[] = [
 	{
 		name: 'Qoder',
 		href: 'https://qoder.com/ide',
+		brandUrl: 'https://qoder.com',
+		brandColor: '#7c3aed',
 		category: 'closed',
+		surfaceGroup: 'editor',
+		pricingModel: 'Credit',
+		convenienceScore: 70,
+		delegationScore: 66,
 		type: {
 			en: 'Agentic IDE',
 			'zh-CN': 'Agentic IDE',
@@ -404,7 +565,13 @@ export const tools: Tool[] = [
 	{
 		name: 'Kiro',
 		href: 'https://kiro.dev/pricing/',
+		brandUrl: 'https://kiro.dev',
+		brandColor: '#0f766e',
 		category: 'closed',
+		surfaceGroup: 'editor',
+		pricingModel: 'Credit',
+		convenienceScore: 68,
+		delegationScore: 62,
 		type: {
 			en: 'Structured agent IDE',
 			'zh-CN': '结构化代理 IDE',
@@ -425,7 +592,13 @@ export const tools: Tool[] = [
 	{
 		name: 'TRAE',
 		href: 'https://www.trae.ai/',
+		brandUrl: 'https://www.trae.ai',
+		brandColor: '#2563eb',
 		category: 'closed',
+		surfaceGroup: 'editor',
+		pricingModel: 'Credit',
+		convenienceScore: 72,
+		delegationScore: 60,
 		type: {
 			en: 'Fast-moving AI IDE',
 			'zh-CN': '高速迭代 AI IDE',
@@ -444,6 +617,8 @@ export const tools: Tool[] = [
 		},
 	},
 ];
+
+export const featuredToolNames = ['OpenCode', 'Cursor', 'GitHub Copilot', 'Claude Code', 'Devin', 'Zed'];
 
 export const copy = {
 	en: {
@@ -479,6 +654,73 @@ export const copy = {
 				text: 'The site mirrors the repo’s English-first, Chinese-supported positioning.',
 			},
 		],
+		modeTitle: 'Map the field',
+		modeText:
+			'The category is splitting into recognizable shapes: terminal agents, AI-first editors, async workers, open platforms, and pricing models that now act like product strategy.',
+		modes: ['Terminal', 'Editor', 'Async', 'Platform', 'Pricing'],
+		signalTitle: 'Signal Strip',
+		signalCards: [
+			{
+				title: 'Open stack energy',
+				text: 'Open-source products are driving distribution and experimentation faster than the old assistant era ever did.',
+			},
+			{
+				title: 'Workflow gravity',
+				text: 'The winners are not just better models. They sit closer to repos, pull requests, CI, deploy, and day-two team processes.',
+			},
+			{
+				title: 'Billing is strategy',
+				text: 'Seat, credit, BYOK, and async-compute pricing now decide far more than procurement. They shape how teams work.',
+			},
+		],
+		brandWallTitle: 'Brand Wall',
+		brandWallText:
+			'The market already has recognizable visual identities. The winners are turning into brands, not just utilities.',
+		editorialTitle: 'Field Notes',
+		editorialText:
+			'This market no longer looks like a plugin shelf. It looks like a media ecosystem: terminal-first insurgents, AI-native editors, platform incumbents, and async workers competing for how software actually gets made.',
+		editorialQuote:
+			'The products that win now are not merely “smarter.” They are better aligned with where software work actually happens.',
+		editorialCards: [
+			{
+				name: 'OpenCode',
+				kicker: 'Open-source pressure',
+				text: 'OpenCode represents the new wave of open tools that no longer apologize for ambition.',
+			},
+			{
+				name: 'Cursor',
+				kicker: 'Editor-native power',
+				text: 'Cursor still defines what a premium AI-first editor feels like when the UX is not an afterthought.',
+			},
+			{
+				name: 'GitHub Copilot',
+				kicker: 'Workflow gravity',
+				text: 'Copilot matters because it sits close to repositories, reviews, CI, and merge decisions.',
+			},
+			{
+				name: 'Devin',
+				kicker: 'Delegated labor',
+				text: 'Devin keeps the async-software-engineer category legible even for people who never use it.',
+			},
+		],
+		matrixTitle: 'Comparison Matrix',
+		matrixText:
+			'A quick scan of where the most important tools sit by openness, interface, pricing behavior, and autonomy style.',
+		mapTitle: 'Landscape Map',
+		mapText:
+			'The current field can be read across two tensions: control versus convenience, and assistance versus delegation.',
+		atlasTitle: 'Pricing Atlas',
+		atlasText:
+			'Pricing is now part of product design. The business model often predicts how the tool wants you to work.',
+		filterTitle: 'Interactive Filters',
+		filterText:
+			'Filter the landscape by openness, surface, or pricing model to see how the market reorganizes itself.',
+		axisXLow: 'More control',
+		axisXHigh: 'More convenience',
+		axisYLow: 'Assistive',
+		axisYHigh: 'Delegative',
+		axisXLabel: 'Control vs convenience',
+		axisYLabel: 'Assistance vs delegation',
 		openTitle: 'Open-Source Leaders',
 		openText:
 			'These projects matter because they do more than expose a chat box. They define the open end of the coding-agent stack: terminal autonomy, editor extensions, open platforms, and provider flexibility.',
@@ -551,6 +793,73 @@ export const copy = {
 				text: '页面层适合传播，README 层继续承担深度研究和持续维护。',
 			},
 		],
+		modeTitle: '赛道结构',
+		modeText:
+			'这个市场正在快速分化成几种明确形态：终端代理、AI 原生编辑器、异步代理工程师、开放平台，以及已经上升为产品战略的定价模型。',
+		modes: ['Terminal', 'Editor', 'Async', 'Platform', 'Pricing'],
+		signalTitle: '关键信号',
+		signalCards: [
+			{
+				title: '开源势能正在放大',
+				text: '这轮分发和实验速度，明显已经超出了旧时代“AI 助手插件”的规模。',
+			},
+			{
+				title: '工作流重力比单点能力更重要',
+				text: '真正的赢家不只是模型更强，而是更靠近 repo、PR、CI、deploy 和团队日常流程。',
+			},
+			{
+				title: '计费方式已经变成产品战略',
+				text: 'Seat、Credit、BYOK、异步算力预算，不再只是价格信息，而是工作方式的一部分。',
+			},
+		],
+		brandWallTitle: '品牌墙',
+		brandWallText:
+			'这个市场已经开始出现明显的品牌形态。真正的赢家，正在从工具进化成品牌。',
+		editorialTitle: 'Field Notes',
+		editorialText:
+			'这个市场已经不像插件货架，更像一个真正的内容产业和软件产业交叉带：终端派、AI 原生编辑器、平台型巨头、异步代理工程师都在争夺“软件到底怎么被生产”。',
+		editorialQuote:
+			'这轮真正赢下来的产品，不只是“更聪明”，而是更贴近软件工作真正发生的位置。',
+		editorialCards: [
+			{
+				name: 'OpenCode',
+				kicker: '开源势能',
+				text: 'OpenCode 代表的是这一轮开源工具不再保守，而是直接冲击上限。',
+			},
+			{
+				name: 'Cursor',
+				kicker: '编辑器权力中心',
+				text: 'Cursor 仍然在定义当一个高端 AI 原生编辑器做对了，会是什么感觉。',
+			},
+			{
+				name: 'GitHub Copilot',
+				kicker: '工作流重力',
+				text: 'Copilot 的真正优势，不是模型，而是它站在 repo、review、CI 和 merge 附近。',
+			},
+			{
+				name: 'Devin',
+				kicker: '委托式软件劳动',
+				text: '即使很多人不用 Devin，也仍然会通过 Devin 来理解“异步代理工程师”这个品类。',
+			},
+		],
+		matrixTitle: '对比矩阵',
+		matrixText:
+			'用一眼能扫懂的方式看关键工具分别站在什么位置：开放性、界面、定价方式、自治程度。',
+		mapTitle: '赛道坐标图',
+		mapText:
+			'当前市场可以沿两组张力来理解：控制感和便利性之间，以及“辅助”与“委托”之间。',
+		atlasTitle: '定价图谱',
+		atlasText:
+			'计费方式已经不只是商业模式，它往往直接决定产品希望你怎么工作。',
+		filterTitle: '交互式筛选',
+		filterText:
+			'按开源/闭源、界面形态或定价方式筛选，看看市场结构会如何重新组织。',
+		axisXLow: '更可控',
+		axisXHigh: '更省事',
+		axisYLow: '偏辅助',
+		axisYHigh: '偏委托',
+		axisXLabel: '控制感 vs 便利性',
+		axisYLabel: '辅助性 vs 委托性',
 		openTitle: '开源阵营',
 		openText:
 			'这些项目之所以重要，不是因为它们开源，而是因为它们真的定义了开放端的 coding-agent 体验：终端自治、编辑器代理、开放平台、provider 灵活切换。',

@@ -1,4 +1,5 @@
 ---
+import { getFaviconUrl, pricingLabel, surfaceLabel } from '../data/catalog';
 import type { Locale, Tool } from '../data/catalog';
 
 const { locale, tool, labels } = Astro.props as {
@@ -12,14 +13,22 @@ const { locale, tool, labels } = Astro.props as {
 };
 ---
 
-<article class="tool-card">
+<article class="tool-card" style={`--brand:${tool.brandColor};`}>
 	<div class="tool-card__top">
-		<div>
+		<div class="tool-card__brand-block">
+			<div class="tool-card__logo-shell">
+				<img class="tool-card__logo" src={getFaviconUrl(tool.brandUrl)} alt={`${tool.name} logo`} loading="lazy" />
+			</div>
 			<div class="tool-card__name-row">
 				<h3>{tool.name}</h3>
 				{tool.stars && <span class="tool-card__stars">{tool.stars}</span>}
 			</div>
 			<p class="tool-card__type">{tool.type[locale]}</p>
+			<div class="tool-card__chips">
+				<span class="tool-card__chip">{tool.category === 'open' ? (locale === 'en' ? 'Open source' : '开源') : locale === 'en' ? 'Closed source' : '闭源'}</span>
+				<span class="tool-card__chip">{surfaceLabel(tool.surfaceGroup, locale)}</span>
+				<span class="tool-card__chip">{pricingLabel(tool.pricingModel, locale)}</span>
+			</div>
 		</div>
 		<a class="tool-card__link" href={tool.href} target="_blank" rel="noreferrer">Open</a>
 	</div>
