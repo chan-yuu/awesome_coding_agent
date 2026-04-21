@@ -659,6 +659,24 @@ export const copy = {
 			'The category is splitting into recognizable shapes: terminal agents, AI-first editors, async workers, open platforms, and pricing models that now act like product strategy.',
 		modes: ['Terminal', 'Editor', 'Async', 'Platform', 'Pricing'],
 		signalTitle: 'Signal Strip',
+		directoryTitle: 'Reader Guide',
+		directoryText:
+			'A long-form landscape page needs navigation. Use this jump bar to move between the major sections instead of scanning blindly.',
+		lineupTitle: 'Tracked Tool Lineup',
+		lineupText:
+			'A readable directory of the products covered on this page, replacing the old marquee strip.',
+		sectionLabels: {
+			lineup: 'Lineup',
+			signal: 'Signal',
+			brands: 'Brands',
+			notes: 'Notes',
+			filters: 'Filters',
+			maps: 'Maps',
+			open: 'Open Source',
+			closed: 'Closed Source',
+			pricing: 'Pricing',
+			source: 'Source',
+		},
 		signalCards: [
 			{
 				title: 'Open stack energy',
@@ -798,6 +816,24 @@ export const copy = {
 			'这个市场正在快速分化成几种明确形态：终端代理、AI 原生编辑器、异步代理工程师、开放平台，以及已经上升为产品战略的定价模型。',
 		modes: ['Terminal', 'Editor', 'Async', 'Platform', 'Pricing'],
 		signalTitle: '关键信号',
+		directoryTitle: '阅读导航',
+		directoryText:
+			'长页面如果没有导航，阅读体验会很差。这里提供章节跳转，不用再盲目往下翻。',
+		lineupTitle: '重点工具总览',
+		lineupText:
+			'把原来的长条跑马灯改成了可读的工具目录，方便快速扫视整页覆盖范围。',
+		sectionLabels: {
+			lineup: '工具总览',
+			signal: '关键信号',
+			brands: '品牌墙',
+			notes: 'Field Notes',
+			filters: '筛选图',
+			maps: '信息图',
+			open: '开源阵营',
+			closed: '闭源阵营',
+			pricing: '定价',
+			source: '来源',
+		},
 		signalCards: [
 			{
 				title: '开源势能正在放大',

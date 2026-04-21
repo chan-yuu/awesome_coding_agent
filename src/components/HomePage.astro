@@ -4,7 +4,7 @@ import EditorialFeature from './EditorialFeature.astro';
 import Infographics from './Infographics.astro';
 import InteractiveLandscape from './InteractiveLandscape.astro';
 import ToolCard from './ToolCard.astro';
-import { copy, tools } from '../data/catalog';
+import { copy, getFaviconUrl, tools } from '../data/catalog';
 import type { Locale } from '../data/catalog';
 
 const { locale } = Astro.props as { locale: Locale };
@@ -12,12 +12,23 @@ const { locale } = Astro.props as { locale: Locale };
 const content = copy[locale];
 const openTools = tools.filter((tool) => tool.category === 'open');
 const closedTools = tools.filter((tool) => tool.category === 'closed');
-const marqueeTools = [...tools, ...tools];
 const topOpenStars = openTools[0]?.stars ?? '';
 const totalTools = tools.length;
 const openCount = openTools.length;
 const closedCount = closedTools.length;
 const toolsByName = new Map(tools.map((tool) => [tool.name, tool]));
+const sectionNav = [
+	{ id: 'lineup', label: content.sectionLabels.lineup },
+	{ id: 'signal', label: content.sectionLabels.signal },
+	{ id: 'brands', label: content.sectionLabels.brands },
+	{ id: 'notes', label: content.sectionLabels.notes },
+	{ id: 'filters', label: content.sectionLabels.filters },
+	{ id: 'maps', label: content.sectionLabels.maps },
+	{ id: 'open-source', label: content.sectionLabels.open },
+	{ id: 'closed-source', label: content.sectionLabels.closed },
+	{ id: 'pricing', label: content.sectionLabels.pricing },
+	{ id: 'source', label: content.sectionLabels.source },
+];
 ---
 
 <div class="page-shell">
@@ -83,19 +94,47 @@ const toolsByName = new Map(tools.map((tool) => [tool.name, tool]));
 		</div>
 	</header>
 
-	<section class="ticker">
-		<div class="ticker__track">
-			{marqueeTools.map((tool) => (
-				<div class={`ticker__item ticker__item--${tool.category}`}>
-					<span class="ticker__name">{tool.name}</span>
-					<span class="ticker__type">{tool.type[locale]}</span>
-				</div>
+	<section class="reader-nav">
+		<div class="reader-nav__intro">
+			<p class="section__eyebrow">Guide</p>
+			<h2>{content.directoryTitle}</h2>
+			<p>{content.directoryText}</p>
+		</div>
+		<div class="reader-nav__links" data-section-nav>
+			{sectionNav.map((item, index) => (
+				<a class={`reader-nav__link ${index === 0 ? 'is-active' : ''}`} href={`#${item.id}`} data-nav-link={`#${item.id}`}>
+					{item.label}
+				</a>
 			))}
 		</div>
 	</section>
 
 	<main class="content">
-		<section class="section signal-strip">
+		<section class="section lineup" id="lineup" data-observe-section>
+			<div class="section__heading">
+				<p class="section__eyebrow">Lineup</p>
+				<h2>{content.lineupTitle}</h2>
+				<p>{content.lineupText}</p>
+			</div>
+			<div class="lineup-grid">
+				{tools.map((tool) => (
+					<article class="lineup-card" style={`--brand:${tool.brandColor};`}>
+						<div class="lineup-card__logo-shell">
+							<img class="lineup-card__logo" src={getFaviconUrl(tool.brandUrl)} alt={`${tool.name} logo`} loading="lazy" />
+						</div>
+						<div class="lineup-card__body">
+							<h3>{tool.name}</h3>
+							<p>{tool.type[locale]}</p>
+						</div>
+						<span class={`lineup-card__tag lineup-card__tag--${tool.category}`}>
+							{tool.category === 'open' ? (locale === 'en' ? 'Open' : '开源') : locale === 'en' ? 'Closed' : '闭源'}
+						</span>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="section signal-strip" id="signal" data-observe-section>
 			<div class="section__heading section__heading--compact">
 				<p class="section__eyebrow">Signal</p>
 				<h2>{content.signalTitle}</h2>
@@ -127,48 +166,56 @@ const toolsByName = new Map(tools.map((tool) => [tool.name, tool]));
 			</div>
 		</section>
 
-		<BrandWall locale={locale} title={content.brandWallTitle} text={content.brandWallText} />
+		<div id="brands" data-observe-section>
+			<BrandWall locale={locale} title={content.brandWallTitle} text={content.brandWallText} />
+		</div>
 
-		<EditorialFeature
-			locale={locale}
-			title={content.editorialTitle}
-			text={content.editorialText}
-			quote={content.editorialQuote}
-			cards={content.editorialCards}
-			toolsByName={toolsByName}
-		/>
+		<div id="notes" data-observe-section>
+			<EditorialFeature
+				locale={locale}
+				title={content.editorialTitle}
+				text={content.editorialText}
+				quote={content.editorialQuote}
+				cards={content.editorialCards}
+				toolsByName={toolsByName}
+			/>
+		</div>
 
-		<InteractiveLandscape
-			locale={locale}
-			copy={{
-				title: content.filterTitle,
-				text: content.filterText,
-				axisXLow: content.axisXLow,
-				axisXHigh: content.axisXHigh,
-				axisYLow: content.axisYLow,
-				axisYHigh: content.axisYHigh,
-				axisXLabel: content.axisXLabel,
-				axisYLabel: content.axisYLabel,
-			}}
-		/>
+		<div id="filters" data-observe-section>
+			<InteractiveLandscape
+				locale={locale}
+				copy={{
+					title: content.filterTitle,
+					text: content.filterText,
+					axisXLow: content.axisXLow,
+					axisXHigh: content.axisXHigh,
+					axisYLow: content.axisYLow,
+					axisYHigh: content.axisYHigh,
+					axisXLabel: content.axisXLabel,
+					axisYLabel: content.axisYLabel,
+				}}
+			/>
+		</div>
 
-		<Infographics
-			locale={locale}
-			copy={{
-				matrixTitle: content.matrixTitle,
-				matrixText: content.matrixText,
-				mapTitle: content.mapTitle,
-				mapText: content.mapText,
-				atlasTitle: content.atlasTitle,
-				atlasText: content.atlasText,
-				axisXLow: content.axisXLow,
-				axisXHigh: content.axisXHigh,
-				axisYLow: content.axisYLow,
-				axisYHigh: content.axisYHigh,
-			}}
-		/>
+		<div id="maps" data-observe-section>
+			<Infographics
+				locale={locale}
+				copy={{
+					matrixTitle: content.matrixTitle,
+					matrixText: content.matrixText,
+					mapTitle: content.mapTitle,
+					mapText: content.mapText,
+					atlasTitle: content.atlasTitle,
+					atlasText: content.atlasText,
+					axisXLow: content.axisXLow,
+					axisXHigh: content.axisXHigh,
+					axisYLow: content.axisYLow,
+					axisYHigh: content.axisYHigh,
+				}}
+			/>
+		</div>
 
-		<section class="section">
+		<section class="section" id="open-source" data-observe-section>
 			<div class="section__heading">
 				<p class="section__eyebrow">Open Source</p>
 				<h2>{content.openTitle}</h2>
@@ -179,7 +226,7 @@ const toolsByName = new Map(tools.map((tool) => [tool.name, tool]));
 			</div>
 		</section>
 
-		<section class="section">
+		<section class="section" id="closed-source" data-observe-section>
 			<div class="section__heading">
 				<p class="section__eyebrow">Closed Source</p>
 				<h2>{content.closedTitle}</h2>
@@ -190,7 +237,7 @@ const toolsByName = new Map(tools.map((tool) => [tool.name, tool]));
 			</div>
 		</section>
 
-		<section class="section section--split">
+		<section class="section section--split" id="pricing" data-observe-section>
 			<div class="split-card">
 				<p class="section__eyebrow">Pricing</p>
 				<h2>{content.pricingTitle}</h2>
@@ -209,7 +256,7 @@ const toolsByName = new Map(tools.map((tool) => [tool.name, tool]));
 			</div>
 		</section>
 
-		<section class="section source-box">
+		<section class="section source-box" id="source" data-observe-section>
 			<p class="section__eyebrow">Source</p>
 			<h2>{content.sourceTitle}</h2>
 			<p>{content.sourceText}</p>
@@ -228,3 +275,35 @@ const toolsByName = new Map(tools.map((tool) => [tool.name, tool]));
 		<p>{content.footer}</p>
 	</footer>
 </div>
+
+<script is:inline>
+	const navRoot = document.querySelector('[data-section-nav]');
+	const navLinks = Array.from(document.querySelectorAll('[data-nav-link]'));
+	const observedSections = Array.from(document.querySelectorAll('[data-observe-section]'));
+
+	if (navRoot && navLinks.length && observedSections.length) {
+		const activate = (id) => {
+			navLinks.forEach((link) => {
+				link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`);
+			});
+		};
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				const visible = entries
+					.filter((entry) => entry.isIntersecting)
+					.sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+				if (visible?.target?.id) {
+					activate(visible.target.id);
+				}
+			},
+			{
+				rootMargin: '-20% 0px -55% 0px',
+				threshold: [0.2, 0.35, 0.5],
+			},
+		);
+
+		observedSections.forEach((section) => observer.observe(section));
+	}
+</script>
