@@ -662,6 +662,7 @@ export const copy = {
 		directoryTitle: 'Reader Guide',
 		directoryText:
 			'A long-form landscape page needs navigation. Use this jump bar to move between the major sections instead of scanning blindly.',
+		directoryToggle: 'Sections',
 		lineupTitle: 'Tracked Tool Lineup',
 		lineupText:
 			'A readable directory of the products covered on this page, replacing the old marquee strip.',
@@ -675,6 +676,16 @@ export const copy = {
 			open: 'Open Source',
 			closed: 'Closed Source',
 			pricing: 'Pricing',
+			source: 'Source',
+		},
+		eyebrowLabels: {
+			guide: 'Guide',
+			lineup: 'Lineup',
+			signal: 'Signal',
+			open: 'Open Source',
+			closed: 'Closed Source',
+			pricing: 'Pricing',
+			picks: 'Quick Picks',
 			source: 'Source',
 		},
 		signalCards: [
@@ -819,6 +830,7 @@ export const copy = {
 		directoryTitle: '阅读导航',
 		directoryText:
 			'长页面如果没有导航，阅读体验会很差。这里提供章节跳转，不用再盲目往下翻。',
+		directoryToggle: '目录',
 		lineupTitle: '重点工具总览',
 		lineupText:
 			'把原来的长条跑马灯改成了可读的工具目录，方便快速扫视整页覆盖范围。',
@@ -832,6 +844,16 @@ export const copy = {
 			open: '开源阵营',
 			closed: '闭源阵营',
 			pricing: '定价',
+			source: '来源',
+		},
+		eyebrowLabels: {
+			guide: '导航',
+			lineup: '工具总览',
+			signal: '关键信号',
+			open: '开源阵营',
+			closed: '闭源阵营',
+			pricing: '定价',
+			picks: '快速建议',
 			source: '来源',
 		},
 		signalCards: [

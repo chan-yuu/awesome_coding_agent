@@ -95,16 +95,21 @@ const sectionNav = [
 	</header>
 
 	<nav class="reader-dock" aria-label={content.directoryTitle} data-section-nav>
+		<button class="reader-dock__toggle" type="button" aria-expanded="false" aria-label={content.directoryTitle} data-nav-toggle>
+			<span class="reader-dock__toggle-dot"></span>
+			<span class="reader-dock__toggle-text">{content.directoryToggle}</span>
+		</button>
 		{sectionNav.map((item, index) => (
-			<a class={`reader-nav__link ${index === 0 ? 'is-active' : ''}`} href={`#${item.id}`} data-nav-link={`#${item.id}`}>
-				{item.label}
+			<a class={`reader-nav__link ${index === 0 ? 'is-active' : ''}`} href={`#${item.id}`} data-nav-link={`#${item.id}`} aria-label={item.label}>
+				<span class="reader-nav__dot"></span>
+				<span class="reader-nav__text">{item.label}</span>
 			</a>
 		))}
 	</nav>
 
 	<section class="reader-nav">
 		<div class="reader-nav__intro">
-			<p class="section__eyebrow">Guide</p>
+			<p class="section__eyebrow">{content.eyebrowLabels.guide}</p>
 			<h2>{content.directoryTitle}</h2>
 			<p>{content.directoryText}</p>
 		</div>
@@ -113,7 +118,7 @@ const sectionNav = [
 	<main class="content">
 		<section class="section lineup" id="lineup" data-observe-section>
 			<div class="section__heading">
-				<p class="section__eyebrow">Lineup</p>
+				<p class="section__eyebrow">{content.eyebrowLabels.lineup}</p>
 				<h2>{content.lineupTitle}</h2>
 				<p>{content.lineupText}</p>
 			</div>
@@ -137,7 +142,7 @@ const sectionNav = [
 
 		<section class="section signal-strip" id="signal" data-observe-section>
 			<div class="section__heading section__heading--compact">
-				<p class="section__eyebrow">Signal</p>
+				<p class="section__eyebrow">{content.eyebrowLabels.signal}</p>
 				<h2>{content.signalTitle}</h2>
 				<p>{content.modeText}</p>
 			</div>
@@ -218,7 +223,7 @@ const sectionNav = [
 
 		<section class="section" id="open-source" data-observe-section>
 			<div class="section__heading">
-				<p class="section__eyebrow">Open Source</p>
+				<p class="section__eyebrow">{content.eyebrowLabels.open}</p>
 				<h2>{content.openTitle}</h2>
 				<p>{content.openText}</p>
 			</div>
@@ -229,7 +234,7 @@ const sectionNav = [
 
 		<section class="section" id="closed-source" data-observe-section>
 			<div class="section__heading">
-				<p class="section__eyebrow">Closed Source</p>
+				<p class="section__eyebrow">{content.eyebrowLabels.closed}</p>
 				<h2>{content.closedTitle}</h2>
 				<p>{content.closedText}</p>
 			</div>
@@ -240,7 +245,7 @@ const sectionNav = [
 
 		<section class="section section--split" id="pricing" data-observe-section>
 			<div class="split-card">
-				<p class="section__eyebrow">Pricing</p>
+				<p class="section__eyebrow">{content.eyebrowLabels.pricing}</p>
 				<h2>{content.pricingTitle}</h2>
 				<p>{content.pricingText}</p>
 				<ul class="bullet-list">
@@ -249,7 +254,7 @@ const sectionNav = [
 			</div>
 
 			<div class="split-card">
-				<p class="section__eyebrow">Quick Picks</p>
+				<p class="section__eyebrow">{content.eyebrowLabels.picks}</p>
 				<h2>{content.picksTitle}</h2>
 				<ul class="bullet-list">
 					{content.picks.map((pick) => <li>{pick}</li>)}
@@ -258,7 +263,7 @@ const sectionNav = [
 		</section>
 
 		<section class="section source-box" id="source" data-observe-section>
-			<p class="section__eyebrow">Source</p>
+			<p class="section__eyebrow">{content.eyebrowLabels.source}</p>
 			<h2>{content.sourceTitle}</h2>
 			<p>{content.sourceText}</p>
 			<div class="hero__actions">
@@ -281,12 +286,18 @@ const sectionNav = [
 	const navRoot = document.querySelector('[data-section-nav]');
 	const navLinks = Array.from(document.querySelectorAll('[data-nav-link]'));
 	const observedSections = Array.from(document.querySelectorAll('[data-observe-section]'));
+	const navToggle = navRoot?.querySelector('[data-nav-toggle]');
 
 	if (navRoot && navLinks.length && observedSections.length) {
 		const activate = (id) => {
 			navLinks.forEach((link) => {
 				link.classList.toggle('is-active', link.getAttribute('href') === `#${id}`);
 			});
+		};
+
+		const setExpanded = (expanded) => {
+			navRoot.classList.toggle('is-expanded', expanded);
+			navToggle?.setAttribute('aria-expanded', expanded ? 'true' : 'false');
 		};
 
 		const observer = new IntersectionObserver(
@@ -306,5 +317,24 @@ const sectionNav = [
 		);
 
 		observedSections.forEach((section) => observer.observe(section));
+
+		navRoot.addEventListener('mouseenter', () => setExpanded(true));
+		navRoot.addEventListener('mouseleave', () => setExpanded(false));
+		navRoot.addEventListener('focusin', () => setExpanded(true));
+		navRoot.addEventListener('focusout', (event) => {
+			if (!navRoot.contains(event.relatedTarget)) {
+				setExpanded(false);
+			}
+		});
+
+		navToggle?.addEventListener('click', () => {
+			setExpanded(!navRoot.classList.contains('is-expanded'));
+		});
+
+		document.addEventListener('click', (event) => {
+			if (!navRoot.contains(event.target)) {
+				setExpanded(false);
+			}
+		});
 	}
 </script>

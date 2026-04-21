@@ -445,19 +445,52 @@ h1 {
 
 .reader-dock {
 	position: fixed;
-	right: 20px;
+	left: 20px;
 	top: 50%;
 	transform: translateY(-50%);
 	z-index: 24;
 	display: grid;
 	gap: 10px;
-	width: min(184px, calc(100vw - 32px));
-	padding: 14px;
+	width: 64px;
+	padding: 12px;
 	border: 1px solid var(--line);
 	border-radius: 24px;
 	background: rgba(255, 250, 242, 0.82);
 	backdrop-filter: blur(18px);
 	box-shadow: 0 18px 42px rgba(36, 23, 15, 0.12);
+	overflow: hidden;
+	transition: width 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.reader-dock:hover,
+.reader-dock:focus-within,
+.reader-dock.is-expanded {
+	width: min(188px, calc(100vw - 32px));
+}
+
+.reader-dock__toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	padding: 10px 12px;
+	border: 1px solid rgba(15, 118, 110, 0.14);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.78);
+	color: var(--text);
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.reader-dock__toggle-dot,
+.reader-nav__dot {
+	flex: 0 0 auto;
+	width: 10px;
+	height: 10px;
+	border-radius: 999px;
+	background: linear-gradient(135deg, var(--accent), var(--accent-2));
+	box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.08);
 }
 
 .reader-nav__intro {
@@ -481,6 +514,8 @@ h1 {
 	display: inline-flex;
 	align-items: center;
 	justify-content: flex-start;
+	gap: 10px;
+	width: 100%;
 	padding: 10px 14px;
 	border-radius: 999px;
 	border: 1px solid transparent;
@@ -489,6 +524,24 @@ h1 {
 	font-weight: 700;
 	color: var(--muted);
 	transition: transform 140ms ease, border-color 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.reader-dock__toggle-text,
+.reader-nav__text {
+	opacity: 0;
+	white-space: nowrap;
+	transform: translateX(-6px);
+	transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.reader-dock:hover .reader-dock__toggle-text,
+.reader-dock:hover .reader-nav__text,
+.reader-dock:focus-within .reader-dock__toggle-text,
+.reader-dock:focus-within .reader-nav__text,
+.reader-dock.is-expanded .reader-dock__toggle-text,
+.reader-dock.is-expanded .reader-nav__text {
+	opacity: 1;
+	transform: translateX(0);
 }
 
 .reader-nav__link:hover {
@@ -501,6 +554,11 @@ h1 {
 	background: linear-gradient(135deg, var(--text), #4f3725);
 	color: #fff8f2;
 	box-shadow: 0 12px 24px rgba(36, 23, 15, 0.18);
+}
+
+.reader-nav__link.is-active .reader-nav__dot {
+	background: #fff8f2;
+	box-shadow: 0 0 0 4px rgba(255, 248, 242, 0.16);
 }
 
 .section {
@@ -1629,14 +1687,20 @@ h1 {
 	}
 
 	.reader-dock {
-		right: 14px;
+		left: 14px;
 		top: auto;
 		bottom: 16px;
 		transform: none;
-		width: min(calc(100vw - 28px), 620px);
-		grid-template-columns: repeat(5, minmax(0, 1fr));
+		width: 70px;
+		max-width: calc(100vw - 28px);
 		gap: 8px;
 		padding: 12px;
+	}
+
+	.reader-dock:hover,
+	.reader-dock:focus-within,
+	.reader-dock.is-expanded {
+		width: min(calc(100vw - 28px), 280px);
 	}
 
 	.hero {
@@ -1672,7 +1736,6 @@ h1 {
 
 	.reader-nav__link {
 		white-space: nowrap;
-		justify-content: center;
 	}
 
 	.lineup-card {
