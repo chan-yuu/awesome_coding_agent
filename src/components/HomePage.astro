@@ -94,18 +94,19 @@ const sectionNav = [
 		</div>
 	</header>
 
+	<nav class="reader-dock" aria-label={content.directoryTitle} data-section-nav>
+		{sectionNav.map((item, index) => (
+			<a class={`reader-nav__link ${index === 0 ? 'is-active' : ''}`} href={`#${item.id}`} data-nav-link={`#${item.id}`}>
+				{item.label}
+			</a>
+		))}
+	</nav>
+
 	<section class="reader-nav">
 		<div class="reader-nav__intro">
 			<p class="section__eyebrow">Guide</p>
 			<h2>{content.directoryTitle}</h2>
 			<p>{content.directoryText}</p>
-		</div>
-		<div class="reader-nav__links" data-section-nav>
-			{sectionNav.map((item, index) => (
-				<a class={`reader-nav__link ${index === 0 ? 'is-active' : ''}`} href={`#${item.id}`} data-nav-link={`#${item.id}`}>
-					{item.label}
-				</a>
-			))}
 		</div>
 	</section>
 

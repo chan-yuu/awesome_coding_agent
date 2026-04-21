@@ -443,6 +443,23 @@ h1 {
 	padding: 6px 0 0;
 }
 
+.reader-dock {
+	position: fixed;
+	right: 20px;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 24;
+	display: grid;
+	gap: 10px;
+	width: min(184px, calc(100vw - 32px));
+	padding: 14px;
+	border: 1px solid var(--line);
+	border-radius: 24px;
+	background: rgba(255, 250, 242, 0.82);
+	backdrop-filter: blur(18px);
+	box-shadow: 0 18px 42px rgba(36, 23, 15, 0.12);
+}
+
 .reader-nav__intro {
 	display: grid;
 	gap: 10px;
@@ -460,24 +477,10 @@ h1 {
 	color: var(--muted);
 }
 
-.reader-nav__links {
-	position: sticky;
-	top: 14px;
-	z-index: 18;
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
-	padding: 14px;
-	border: 1px solid var(--line);
-	border-radius: 22px;
-	background: rgba(255, 250, 242, 0.8);
-	backdrop-filter: blur(18px);
-	box-shadow: 0 16px 36px rgba(36, 23, 15, 0.08);
-}
-
 .reader-nav__link {
 	display: inline-flex;
 	align-items: center;
+	justify-content: flex-start;
 	padding: 10px 14px;
 	border-radius: 999px;
 	border: 1px solid transparent;
@@ -1625,6 +1628,17 @@ h1 {
 		width: min(calc(100% - 20px), var(--max-width));
 	}
 
+	.reader-dock {
+		right: 14px;
+		top: auto;
+		bottom: 16px;
+		transform: none;
+		width: min(calc(100vw - 28px), 620px);
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		gap: 8px;
+		padding: 12px;
+	}
+
 	.hero {
 		padding-top: 18px;
 	}
@@ -1656,15 +1670,9 @@ h1 {
 		font-size: clamp(2.5rem, 14vw, 4rem);
 	}
 
-	.reader-nav__links {
-		top: 10px;
-		flex-wrap: nowrap;
-		overflow-x: auto;
-		padding-bottom: 12px;
-	}
-
 	.reader-nav__link {
 		white-space: nowrap;
+		justify-content: center;
 	}
 
 	.lineup-card {
