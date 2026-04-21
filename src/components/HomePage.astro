@@ -1,0 +1,113 @@
+---
+import ToolCard from './ToolCard.astro';
+import { copy, tools } from '../data/catalog';
+import type { Locale } from '../data/catalog';
+
+const { locale } = Astro.props as { locale: Locale };
+
+const content = copy[locale];
+const openTools = tools.filter((tool) => tool.category === 'open');
+const closedTools = tools.filter((tool) => tool.category === 'closed');
+---
+
+<div class="page-shell">
+	<header class="hero">
+		<nav class="topbar">
+			<a class="brand" href="https://github.com/chan-yuu/awesome_coding_agent" target="_blank" rel="noreferrer">
+				<span class="brand__dot"></span>
+				Awesome Coding Agents
+			</a>
+			<a class="lang-switch" href={content.otherLangHref}>{content.otherLangLabel}</a>
+		</nav>
+
+		<div class="hero__content">
+			<div class="hero__copy">
+				<p class="eyebrow">{content.eyebrow}</p>
+				<h1>{content.title}</h1>
+				<p class="hero__subtitle">{content.subtitle}</p>
+				<div class="hero__actions">
+					<a class="button button--primary" href={content.ctaPrimaryHref} target="_blank" rel="noreferrer">
+						{content.ctaPrimary}
+					</a>
+					<a class="button button--secondary" href={content.ctaSecondaryHref} target="_blank" rel="noreferrer">
+						{content.ctaSecondary}
+					</a>
+				</div>
+			</div>
+
+			<div class="hero__panel">
+				<p class="hero__panel-label">{content.snapshotTitle}</p>
+				<p class="hero__panel-text">{content.snapshotText}</p>
+				<div class="hero__grid">
+					{content.highlights.map((item) => (
+						<div class="snapshot-card">
+							<h3>{item.title}</h3>
+							<p>{item.text}</p>
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<main class="content">
+		<section class="section">
+			<div class="section__heading">
+				<p class="section__eyebrow">Open Source</p>
+				<h2>{content.openTitle}</h2>
+				<p>{content.openText}</p>
+			</div>
+			<div class="tool-grid">
+				{openTools.map((tool) => <ToolCard locale={locale} tool={tool} labels={content.cardLabels} />)}
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="section__heading">
+				<p class="section__eyebrow">Closed Source</p>
+				<h2>{content.closedTitle}</h2>
+				<p>{content.closedText}</p>
+			</div>
+			<div class="tool-grid">
+				{closedTools.map((tool) => <ToolCard locale={locale} tool={tool} labels={content.cardLabels} />)}
+			</div>
+		</section>
+
+		<section class="section section--split">
+			<div class="split-card">
+				<p class="section__eyebrow">Pricing</p>
+				<h2>{content.pricingTitle}</h2>
+				<p>{content.pricingText}</p>
+				<ul class="bullet-list">
+					{content.pricingPoints.map((point) => <li>{point}</li>)}
+				</ul>
+			</div>
+
+			<div class="split-card">
+				<p class="section__eyebrow">Quick Picks</p>
+				<h2>{content.picksTitle}</h2>
+				<ul class="bullet-list">
+					{content.picks.map((pick) => <li>{pick}</li>)}
+				</ul>
+			</div>
+		</section>
+
+		<section class="section source-box">
+			<p class="section__eyebrow">Source</p>
+			<h2>{content.sourceTitle}</h2>
+			<p>{content.sourceText}</p>
+			<div class="hero__actions">
+				<a class="button button--primary" href={content.sourcePrimaryHref} target="_blank" rel="noreferrer">
+					{content.sourcePrimary}
+				</a>
+				<a class="button button--secondary" href={content.sourceSecondaryHref} target="_blank" rel="noreferrer">
+					{content.sourceSecondary}
+				</a>
+			</div>
+		</section>
+	</main>
+
+	<footer class="footer">
+		<p>{content.footer}</p>
+	</footer>
+</div>

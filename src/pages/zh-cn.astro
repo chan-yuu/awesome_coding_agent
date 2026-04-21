@@ -1,0 +1,11 @@
+---
+import HomePage from '../components/HomePage.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { copy } from '../data/catalog';
+
+const content = copy['zh-CN'];
+---
+
+<BaseLayout title={content.metaTitle} description={content.metaDescription} lang="zh-CN">
+	<HomePage locale="zh-CN" />
+</BaseLayout>
